@@ -5,6 +5,10 @@
 #include <map> // multimap (ordered map allowing duplicate keys)
 #include <fstream> // ifstream.good()
 
+#include <dirent.h>
+
+#include <sys/stat.h>
+
 #ifdef _OPENMP
     #include <omp.h>
 #endif // _OPENMP
@@ -206,6 +210,40 @@ bool FffPolygonGenerator::sliceModel(MeshGroup* meshgroup, TimeKeeper& timeKeepe
     }
     storage.support.supportLayers.resize(storage.print_layer_count);
 
+    for (unsigned int meshIdx = 0; meshIdx < slicerList.size(); meshIdx++)
+    {
+        Slicer* slicer = slicerList[meshIdx];
+        Mesh& mesh = scene.current_mesh_group->meshes[meshIdx];
+
+        for (coord_t layer_idx = 0; layer_idx < slicer->layers.size(); layer_idx++)
+        {
+            SlicerLayer& layer = slicer->layers[layer_idx];
+            std::ostringstream ss;
+            ss << "output/";
+            if (opendir(ss.str().c_str()) || mkdir(ss.str().c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH) == -1)
+            {
+//                 logError("Cannot create folder '%s'\n", ss.str().c_str());
+            }
+            ss << "outlines/";
+            if (opendir(ss.str().c_str()) || mkdir(ss.str().c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH) == -1)
+            {
+//                 logError("Cannot create folder '%s'\n", ss.str().c_str());
+            }
+            std::string filename = mesh.settings.get<std::string>("filename");
+            std::replace(filename.begin(), filename.end(), '_', '-');
+            ss << filename << "_";
+//             if (opendir(ss.str().c_str()) || mkdir(ss.str().c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH) == -1)
+//             {
+//                 logError("Cannot create folder '%s'\n", ss.str().c_str());
+//             }
+            ss << "outline_mesh" << meshIdx << "_layer" << layer_idx << ".svg";
+            SVG svg(ss.str().c_str(), mesh.getAABB().flatten(), INT2MM(1));
+            svg.writeAreas(layer.polygons);
+        }
+    }
+    std::exit(0);
+    
+    
     storage.meshes.reserve(slicerList.size()); // causes there to be no resize in meshes so that the pointers in sliceMeshStorage._config to retraction_config don't get invalidated.
     for (unsigned int meshIdx = 0; meshIdx < slicerList.size(); meshIdx++)
     {

@@ -30,11 +30,14 @@ std::string SVG::toString(Color color)
 
 
 SVG::SVG(const char* filename, AABB aabb, Point canvas_size, Color background)
+: SVG(filename, aabb, std::min(double(canvas_size.X) / (aabb.max.X - aabb.min.X), double(canvas_size.Y) / (aabb.max.Y - aabb.min.Y)), canvas_size, background)
+{}
+
+SVG::SVG(const char* filename, AABB aabb, double scale, Point canvas_size, Color background)
 : aabb(aabb)
 , aabb_size(aabb.max - aabb.min)
-, border(canvas_size.X / 5, canvas_size.Y / 10)
 , canvas_size(canvas_size)
-, scale(std::min(double(canvas_size.X - border.X * 2) / aabb_size.X, double(canvas_size.Y - border.Y * 2) / aabb_size.Y))
+, scale(scale)
 , background(background)
 {
     output_is_html = strcmp(filename + strlen(filename) - 4, "html") == 0;
@@ -77,12 +80,12 @@ double SVG::getScale() const
 
 Point SVG::transform(const Point& p) 
 {
-    return Point((p.X - aabb.min.X) * scale, canvas_size.X - border.X - (p.Y - aabb.min.Y) * scale) + border;
+    return Point((p.X - aabb.min.X) * scale, canvas_size.X  - (p.Y - aabb.min.Y) * scale);
 }
 
 FPoint3 SVG::transformF(const Point& p) 
 {
-    return FPoint3((p.X - aabb.min.X) * scale + border.X, canvas_size.X - border.X + border.Y - (p.Y-aabb.min.Y) * scale, 0.0);
+    return FPoint3((p.X - aabb.min.X) * scale, canvas_size.X - (p.Y-aabb.min.Y) * scale, 0.0);
 }
 
 void SVG::writeComment(std::string comment)

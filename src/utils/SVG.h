@@ -37,7 +37,6 @@ private:
     FILE* out; // the output file
     const AABB aabb; // the boundary box to display
     const Point aabb_size;
-    const Point border;
     const Point canvas_size;
     const double scale;
     Color background;
@@ -46,6 +45,7 @@ private:
 
 public:
     SVG(const char* filename, AABB aabb, Point canvas_size = Point(1024, 1024), Color background = Color::NONE);
+    SVG(const char* filename, AABB aabb, double scale, Point canvas_size = Point(1024, 1024), Color background = Color::NONE);
 
     ~SVG();
 

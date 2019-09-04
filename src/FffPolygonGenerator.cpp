@@ -236,7 +236,7 @@ bool FffPolygonGenerator::sliceModel(MeshGroup* meshgroup, TimeKeeper& timeKeepe
 //             {
 //                 logError("Cannot create folder '%s'\n", ss.str().c_str());
 //             }
-            ss << "outline_mesh" << meshIdx << "_layer" << layer_idx << ".svg";
+            ss << "outline_mesh" << meshIdx << "_z" << layer.z << ".svg";
             SVG svg(ss.str().c_str(), mesh.getAABB().flatten(), INT2MM(1));
             svg.writeAreas(layer.polygons);
         }

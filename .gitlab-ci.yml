@@ -53,6 +53,7 @@ publish-packages:
     - docker/publish-packages.sh
   only:
     - master
+    - WIP_cross_compile
   artifacts:
     paths:
       - build/*.deb

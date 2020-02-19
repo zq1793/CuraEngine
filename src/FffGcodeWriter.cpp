@@ -683,7 +683,8 @@ void FffGcodeWriter::processRaft(const SliceDataStorage& storage)
         gcode_layer.addPolygonsByOptimizer(wall, gcode_layer.configs_storage.raft_base_config);
 
         Polygons raftLines;
-        double fill_angle = 0;
+        const std::vector<AngleDegrees> fill_angles = train.settings.get<std::vector<AngleDegrees>>("raft_angles");
+        const AngleDegrees fill_angle = fill_angles.at(z % fill_angles.size());
         constexpr bool zig_zaggify_infill = false;
         constexpr bool connect_polygons = true; // causes less jerks, so better adhesion
 
@@ -744,7 +745,8 @@ void FffGcodeWriter::processRaft(const SliceDataStorage& storage)
         constexpr coord_t infill_outline_width = 0;
         Polygons raftLines;
         int offset_from_poly_outline = 0;
-        AngleDegrees fill_angle = train.settings.get<size_t>("raft_surface_layers") > 0 ? 45 : 90;
+        const std::vector<AngleDegrees> fill_angles = train.settings.get<std::vector<AngleDegrees>>("raft_angles");
+        const AngleDegrees fill_angle = fill_angles.at(z % fill_angles.size());
         constexpr bool zig_zaggify_infill = true;
         constexpr bool connect_polygons = true; // why not?
 
@@ -801,7 +803,8 @@ void FffGcodeWriter::processRaft(const SliceDataStorage& storage)
         constexpr coord_t infill_outline_width = 0;
         Polygons raft_lines;
         int offset_from_poly_outline = 0;
-        AngleDegrees fill_angle = 90 * raft_surface_layer;
+        const std::vector<AngleDegrees> fill_angles = train.settings.get<std::vector<AngleDegrees>>("raft_angles");
+        const AngleDegrees fill_angle = fill_angles.at(z % fill_angles.size());
         constexpr bool zig_zaggify_infill = true;
 
         constexpr size_t wall_line_count = 0;

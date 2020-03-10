@@ -356,9 +356,11 @@ void PolygonRef::simplify(const coord_t smallest_line_segment_squared, const coo
         //h^2 = (2A)^2 / b^2  [factor the divisor]
         //h^2 = 4A^2 / b^2    [remove brackets of (2A)^2]
         const coord_t height_2 = (4 * area_removed_so_far * area_removed_so_far) / base_length_2;
-        if (length2 < smallest_line_segment_squared
-            && next_length2 < smallest_line_segment_squared // Segments are small
-            && height_2 <= allowed_error_distance_squared) // removing the vertex doesn't introduce too much error.
+        if ((height_2 <= 25 //Almost exactly colinear (barring rounding errors).
+            && LinearAlg2D::getDist2FromLine(current, previous, next) <= 25) // make sure that height_2 is not small because of cancellation of positive and negative areas
+            || (length2 < smallest_line_segment_squared
+                && next_length2 < smallest_line_segment_squared // Segments are small
+                && height_2 <= allowed_error_distance_squared)) // removing the vertex doesn't introduce too much error.
         {
             continue; //Remove the vertex.
         }

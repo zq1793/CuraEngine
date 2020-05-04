@@ -151,4 +151,24 @@ void WallsComputation::generateInsets(SliceLayer* layer)
     }
 }
 
+
+
+void WallsComputation::alternateWallDirections(SliceMeshStorage& mesh)
+{
+    for (LayerIndex layer_nr = 0; layer_nr < mesh.layers.size(); layer_nr++)
+    {
+        SliceLayer& layer = mesh.layers[layer_nr];
+        for (SliceLayerPart& part : layer.parts)
+        {
+            for (size_t inset_idx = std::abs(layer_nr % 2); inset_idx < part.insets.size(); inset_idx += 2)
+            {
+                for (PolygonRef poly : const_cast<Polygons&>(part.insets[inset_idx]))
+                {
+                    poly.reverse();
+                }
+            }
+        }
+    }
+}
+
 }//namespace cura

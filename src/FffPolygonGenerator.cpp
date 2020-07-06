@@ -800,6 +800,20 @@ void FffPolygonGenerator::processInsets(SliceMeshStorage& mesh, size_t layer_nr)
             part.print_outline = part.outline;
         }
     }
+
+    if (mesh.settings.get<bool>("alternate_wall_direction"))
+    {
+        for (SliceLayerPart& part : layer->parts)
+        {
+            for (size_t inset_idx = layer_nr % 2; inset_idx < part.insets.size(); inset_idx += 2)
+            {
+                for (PolygonRef poly : part.insets[inset_idx])
+                {
+                    poly.reverse();
+                }
+            }
+        }
+    }
 }
 
 bool FffPolygonGenerator::isEmptyLayer(SliceDataStorage& storage, const unsigned int layer_idx)

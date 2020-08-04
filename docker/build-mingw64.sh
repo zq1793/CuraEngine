@@ -35,6 +35,8 @@ cd /usr/${TOOLCHAIN_PREFIX}/lib
 ln -s libws2_32.a libWs2_32.a
 cd "${_old_pwd}"
 
+dpkg -L libboost-dev
+
 mkdir build
 cd build
 cmake \
@@ -52,6 +54,7 @@ cmake \
     -DCMAKE_FIND_ROOT_PATH_MODE_LIBRARY=ONLY \
     -DBUILD_TESTS=OFF \
     -DCMAKE_VERBOSE_MAKEFILE=ON \
+    -DBOOST_ROOT=/usr \
     ..
 make
 # Create DEB

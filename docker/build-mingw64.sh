@@ -54,7 +54,7 @@ cmake \
     -DCMAKE_FIND_ROOT_PATH_MODE_LIBRARY=ONLY \
     -DBUILD_TESTS=OFF \
     -DCMAKE_VERBOSE_MAKEFILE=ON \
-    -DBOOST_ROOT=/usr \
+    -DBOOST_INCLUDEDIR=/usr/include \
     ..
 make
 # Create DEB

@@ -35,7 +35,7 @@ cd /usr/${TOOLCHAIN_PREFIX}/lib
 ln -s libws2_32.a libWs2_32.a
 cd "${_old_pwd}"
 
-dpkg -L libboost-dev
+dpkg -L libboost1.67-dev
 
 mkdir build
 cd build
